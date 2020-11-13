@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gemantic.microservices</groupId>
+        <artifactId>spring-boot-gemantic-service-parent</artifactId>
+        <version>2.1.6</version>
+    </parent>
+    <groupId>com.gemantic.report</groupId>
+    <artifactId>report-composite-etl</artifactId>
+    <version>0.0.12-SNAPSHOT</version>
+    <name>report-composite-etl</name>
+    <description>自动配置树</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <springcloud-commons-core.version>0.16</springcloud-commons-core.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gemantic.report</groupId>
+            <artifactId>config-report-core</artifactId>
+            <version>0.0.29-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gemantic.warehouse</groupId>
+            <artifactId>metadata-theme-core</artifactId>
+            <version>0.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gemantic.springcloud</groupId>
+            <artifactId>springcloud-commons-core</artifactId>
+            <version>0.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-collections4</artifactId>
+                    <groupId>org.apache.commons</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+       <!-- <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>com.gemantic.microservices</groupId>
+            <artifactId>semantic-db-core</artifactId>
+            <version>1.16</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gemantic.kg</groupId>
+            <artifactId>kb-doc-core</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.client</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.protocol</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gemantic.warehouse</groupId>
+            <artifactId>metadata-theme-core</artifactId>
+            <version>0.0.9-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <version>1.5.8.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <!-- 这里会覆盖父pom文件中的该配置项，所以把.iml也放进来 -->
+                    <checkModificationExcludeList>
+                        .project,
+                        .classpath,
+                        ${project.artifactId}.iml
+                    </checkModificationExcludeList>
+                    <useReleaseProfile>false</useReleaseProfile>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <!--<version>1.0-m3</version>-->
+                <version>1.0-m5.1</version>
+                <configuration>
+                    <!-- see goals wiki page for configuration options -->
+                    <flowInitContext>
+                        <masterBranchName>master</masterBranchName>
+                        <developBranchName>develop</developBranchName>
+                        <featureBranchPrefix>feature-</featureBranchPrefix>
+                        <releaseBranchPrefix>release-</releaseBranchPrefix>
+                        <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
+                        <versionTagPrefix>${project.artifactId}-</versionTagPrefix>
+                    </flowInitContext>
+                    <noDeploy>true</noDeploy>
+                    <!--<autoVersionSubmodules>true</autoVersionSubmodules>-->
+                    <pushReleases>true</pushReleases>
+                    <allowUntracked>true</allowUntracked>
+                    <username>${git.user}</username>
+                    <password>${git.password}</password>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>releases</name>
+            <url>http://mvn.gemantic.com/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshots Repository Pro</name>
+            <url>http://mvn.gemantic.com/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Repository</name>
+            <url>http://mvn.gemantic.com/content/repositories/releases</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <!--snapshots默认是关闭的,需要开启  -->
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>
